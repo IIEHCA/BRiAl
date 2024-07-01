@@ -369,6 +369,7 @@ public:
   /// Returns number of terms
   size_type length() const;
 
+  size_t hamming_weight() ;
   /// Print current polynomial to output stream
   ostream_type& print(ostream_type&) const;
 

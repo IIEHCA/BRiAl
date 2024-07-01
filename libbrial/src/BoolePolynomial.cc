@@ -418,7 +418,29 @@ BoolePolynomial::length() const {
   return m_dd.length();
 }
 
-
+size_t BoolePolynomial::hamming_weight(){
+  std::vector<bool> v(1<<(this->nUsedVariables()));
+  for(auto it = this->expBegin();it!=this->expEnd();++it)
+  {
+    int idx = 0;
+    for(auto k:it)
+      idx |= 1 << k;
+    v[idx] = 1;
+  }
+  int n = (this->nUsedVariables());
+  for(size_t i=0;i<n;++i)
+  {
+    int Sz = 1<<i,Pos = 0;
+    while(Pos < (1<<n))
+    {
+      for (size_t j = 0; j < Sz; j++)
+        v[Pos + Sz+j] = v[Pos + j] ^ v[Pos + Sz + j];
+      Pos += 2*Sz;
+    }
+  }
+  return std::count_if(v.begin(), v.end(), [](bool bit) {
+        return bit;});
+}
 // Print current polynomial to output stream
 BoolePolynomial::ostream_type&
 BoolePolynomial::print(ostream_type& os) const {
